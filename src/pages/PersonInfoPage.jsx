@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useParams, useOutletContext } from "react-router-dom";
+import { useParams, useOutletContext  } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { PageLayout } from "@/component/PageLayout";
 
@@ -7,13 +7,14 @@ export const PersonInfoPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { personId } = useParams();
 
+
   const context = useOutletContext();
   const people = context?.people || [];
 
   const person = people.find((p) => String(p.id) === personId);
 
   useEffect(() => {
-    
+
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);

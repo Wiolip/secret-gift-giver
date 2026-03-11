@@ -13,7 +13,7 @@ export const ExchangePage = () => {
 
   const handleShuffle = () => {
 
-    if (participants.length < 2) return;
+    if (participants.length < 3) return;
 
 
     let result = [];
@@ -64,13 +64,13 @@ export const ExchangePage = () => {
     <PageLayout title="Exchange of gifts">
       <div className="box">
         {/* Render warning if the user hasn't selected enough people yet */}
-        {participants.length < 2 ? (
+        {participants.length < 3 ? (
           <Notification type="is-warning">
             <p>
               ⚠️ <strong>Not enough people!</strong>
             </p>
             <p>
-              Go back to the <strong>People</strong> tab and select at least 2
+              Go back to the <strong>People</strong> tab and select at least 3
               participants.
             </p>
           </Notification>

@@ -44,10 +44,10 @@ export const PeoplePage = () => {
       <div className="columns is-desktop">
         <div className={classNames("column", personId ? "is-4" : "is-12")}>
           <div className="block">
-            {selectedPeopleIds.length < 2 ? (
+            {selectedPeopleIds.length < 3 ? (
               <Notification type="is-warning" className="has-text-centered">
                 <p>
-                  👋 <strong>Select at least 2 people</strong> from the list
+                  👋 <strong>Select at least 3 people</strong> from the list
                   below to unlock the gift draw! You can also{" "}
                   <strong>select all participants</strong> by clicking the
                   button below.

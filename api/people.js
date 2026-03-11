@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+
 let people = [
     {
         "id": "276",
@@ -52,7 +54,8 @@ export async function POST(request) { // <--- Tutaj musisz przyjąć 'request' j
 
         const newPerson = {
             ...body,
-            id: body.id || Math.random().toString(36).substr(2, 9)
+            // id: body.id || Math.random().toString(36).substr(2, 9)
+            d: body.id || nanoid(10)
         };
 
         people.push(newPerson);
