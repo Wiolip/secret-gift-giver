@@ -3,7 +3,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 export const AddPersonForm = ({ onSubmit }) => {
-  const initialValues = { name: "", email: "" };
+
+  const initialValues = { name: "", email: "", newsletter: false };
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -12,6 +13,7 @@ export const AddPersonForm = ({ onSubmit }) => {
     email: Yup.string()
       .required("Email is required")
       .email("Invalid email format"),
+    newsletter: Yup.boolean(), 
   });
 
   return (
@@ -55,6 +57,16 @@ export const AddPersonForm = ({ onSubmit }) => {
               component="div"
               className="help is-danger"
             />
+          </div>
+
+          {/* 3. NOWE POLE: Newsletter Checkbox */}
+          <div className="field mt-4">
+            <div className="control">
+              <label className="checkbox">
+                <Field type="checkbox" name="newsletter" className="mr-2" />I
+                want to subscribe to the newsletter
+              </label>
+            </div>
           </div>
 
           <div className="field mt-5">

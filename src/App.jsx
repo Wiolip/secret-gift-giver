@@ -1,36 +1,72 @@
 // @ts-nocheck
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import PropTypes from "prop-types";
 import "bulma/css/bulma.css";
 
 import { Header } from "@/component/Header";
-import { PeoplePage } from "@/pages/PeoplePage";
 import { Navbar } from "@/component/Navbar";
-import { people as initialPeople } from "@/people";
-import { AddPersonPage } from "./pages/AddPersonPage";
-
+import { peopleService } from "./services/peopleService";
 
 function App() {
-  const [allPeople, setAllPeople] = useState(initialPeople);
-  const [selectedNames, setSelectedNames] = useState([]);
+  const [allPeople, setAllPeople] = useState([]);
+  const [selectedPeopleIds, setSelectedPeopleIds] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleSelect = (name) => {
-    const isSelected = selectedNames.includes(name);
-    setSelectedNames(
+  useEffect(() => {
+    const fetchPeople = async () => {
+      try {
+        setIsLoading(true);
+        const response = await peopleService.getPeople();
+        setAllPeople(response.data);
+      } catch (error) {
+        console.error(
+          "Unable to load the list of participants. Please try again later.",
+          error,
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPeople();
+  }, []);
+
+  const handleSelect = (id) => {
+    const isSelected = selectedPeopleIds.includes(id);
+
+    setSelectedPeopleIds(
       isSelected
-        ? selectedNames.filter((n) => n !== name)
-        : [...selectedNames, name],
+        ? selectedPeopleIds.filter((personId) => personId !== id)
+        : [...selectedPeopleIds, id],
     );
   };
 
   const clearSelections = () => {
-    setSelectedNames([]);
+    setSelectedPeopleIds([]);
   };
 
-  const addNewPerson = (name) => {
-    if (!allPeople.includes(name)) {
-      setAllPeople([...allPeople, name]);
+  const selectAllPeople = () => {
+    const allIds = allPeople.map((person) => person.id);
+    setSelectedPeopleIds(allIds);
+  };
+
+  const addNewPerson = async (personData) => {
+    try {
+      const response = await peopleService.addPerson(personData);
+
+      setAllPeople((prev) => [...prev, response.data]);
+    } catch (error) {
+      console.error("Failed to add person to the server:", error);
+    }
+  };
+
+  const deletePerson = async (id) => {
+    try {
+      await peopleService.deletePerson(id);
+
+      setAllPeople((prev) => prev.filter((person) => person.id !== id));
+    } catch (error) {
+      console.error(`Failed to delete person with ID ${id}:`, error);
     }
   };
 
@@ -43,15 +79,25 @@ function App() {
       <Navbar />
 
       <main className="container mt-4 p-4">
-        <Outlet
-          context={{
-            people: allPeople,
-            selectedNames,
-            handleSelect,
-            clearSelections,
-            addNewPerson,
-          }}
-        />
+        {isLoading ? (
+          <div className="has-text-centered">
+            <button className="button is-loading is-large is-ghost">
+              Loading
+            </button>
+          </div>
+        ) : (
+          <Outlet
+            context={{
+              people: allPeople,
+              selectedPeopleIds,
+              selectAllPeople,
+              handleSelect,
+              clearSelections,
+              addNewPerson,
+              deletePerson,
+            }}
+          />
+        )}
       </main>
     </>
   );

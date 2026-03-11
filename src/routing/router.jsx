@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 
@@ -10,18 +11,15 @@ import { AddPersonPage } from "@/pages/AddPersonPage";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <App />, // Główny rodzic dostarczający Navbar i Context
     children: [
       {
-        path: "",
-        element: <PeoplePage noOutlet />,
-      },
-      {
-        path: "people",
+        path: "/", // Strona główna z listą
         element: <PeoplePage />,
         children: [
           {
-            path: ":personName",
+            // Detale osoby wyświetlane w kolumnie obok listy
+            path: "people/:personId",
             element: <PersonInfoPage />,
           },
         ],
@@ -32,7 +30,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "add-person",
-        element: <AddPersonPage/>,
+        element: <AddPersonPage />,
       },
       {
         path: "*",

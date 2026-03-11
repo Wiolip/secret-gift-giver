@@ -4,25 +4,27 @@ import { PageLayout } from "@/component/PageLayout";
 import { Notification } from "@/component/Notification";
 
 export const ExchangePage = () => {
-  // Get selected participants from App via Outlet context
-  const { selectedNames } = useOutletContext();
-
-  // State to store the generated pairs { giver, receiver, isRevealed }
+  const { people, selectedPeopleIds } = useOutletContext();
   const [pairs, setPairs] = useState([]);
 
-  const handleShuffle = () => {
-    // Safety check: need at least 2 people to swap gifts
-    if (selectedNames.length < 2) return;
+  const participants = people.filter((person) =>
+    selectedPeopleIds.includes(person.id),
+  );
 
-    // 1. Create a copy of the list to shuffle
-    let pool = [...selectedNames];
+  const handleShuffle = () => {
+
+    if (participants.length < 2) return;
+
+
     let result = [];
     let attempts = 0;
     let success = false;
 
-    // Attempt to generate a valid shuffle (max 100 attempts to avoid infinite loops)
+
     while (!success && attempts < 100) {
       attempts++;
+
+      let pool = [...participants];
       result = [];
 
       // Fisher-Yates shuffle algorithm to randomize the recipient pool
@@ -32,13 +34,13 @@ export const ExchangePage = () => {
       }
 
       // Check for "self-draws": ensure no one is assigned to themselves
-      // We compare the original selectedNames list with the shuffled pool
-      success = selectedNames.every((name, index) => name !== pool[index]);
+      // We compare the original selectedPeopleIds list with the shuffled pool
+      success = participants.every((p, index) => p.id !== pool[index].id);
 
       if (success) {
         // Build the final array with a hidden state for the UI
-        result = selectedNames.map((name, index) => ({
-          giver: name,
+        result = participants.map((p, index) => ({
+          giver: p,
           receiver: pool[index],
           isRevealed: false,
         }));
@@ -46,21 +48,23 @@ export const ExchangePage = () => {
     }
 
     // Update state with the new randomized pairs
-    setPairs([...result]);
+    setPairs(result);
   };
 
   // Toggle the visibility of a specific result in the table
   const toggleReveal = (index) => {
-    const newPairs = [...pairs];
-    newPairs[index].isRevealed = !newPairs[index].isRevealed;
-    setPairs(newPairs);
+    setPairs((prev) =>
+      prev.map((pair, i) =>
+        i === index ? { ...pair, isRevealed: !pair.isRevealed } : pair,
+      ),
+    );
   };
 
   return (
     <PageLayout title="Exchange of gifts">
       <div className="box">
         {/* Render warning if the user hasn't selected enough people yet */}
-        {selectedNames.length < 2 ? (
+        {participants.length < 2 ? (
           <Notification type="is-warning">
             <p>
               ⚠️ <strong>Not enough people!</strong>
@@ -82,7 +86,7 @@ export const ExchangePage = () => {
 
         {/* Render the results table once pairs have been generated */}
         {pairs.length > 0 && (
-          <div className="table-container mt-4">
+          <div className="table-container mt-4 animate__animated animate__fadeIn">
             <table className="table is-fullwidth is-hoverable">
               <thead>
                 <tr>
@@ -92,20 +96,21 @@ export const ExchangePage = () => {
               </thead>
               <tbody>
                 {pairs.map((pair, index) => (
-                  <tr key={index}>
+                  <tr key={pair.giver.id}>
                     <td className="is-vcentered">
-                      <strong>{pair.giver}</strong>
+                      <strong>{pair.giver.name}</strong>
+                      <div className="is-size-7 has-text-grey">
+                        {pair.giver.email}
+                      </div>
                     </td>
                     <td className="has-text-centered">
                       <button
                         className={`button is-small ${pair.isRevealed ? "is-success is-light" : "is-dark"}`}
                         onClick={() => toggleReveal(index)}>
                         {pair.isRevealed ? (
-                          <span>
-                            🎁 Giving to: <strong>{pair.receiver}</strong>
-                          </span>
+                          <span>🎁 {pair.receiver.name}</span>
                         ) : (
-                          "Click to reveal"
+                          <span>🔒 Click to reveal</span>
                         )}
                       </button>
                     </td>
@@ -113,9 +118,6 @@ export const ExchangePage = () => {
                 ))}
               </tbody>
             </table>
-            <p className="help has-text-centered mt-3">
-              Don't peek at others' results! Click the button to see your match.
-            </p>
           </div>
         )}
       </div>

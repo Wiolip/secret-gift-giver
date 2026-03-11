@@ -1,48 +1,73 @@
 // @ts-nocheck
 import { useState } from "react";
-import { Outlet, useOutletContext } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Outlet, useOutletContext, Link, useParams } from "react-router-dom";
+import classNames from "classnames";
+
 import { PageLayout } from "@/component/PageLayout";
 import { PeopleList } from "@/component/PeopleList";
 import { Searchbar } from "@/component/Searchbar";
 import { Notification } from "@/component/Notification";
 
 
-export const PeoplePage = ({ noOutlet = false }) => {
+export const PeoplePage = () => {
+  const [searchText, setSearchText] = useState("");
+  const { personId } = useParams();
 
-  const [searchText, setSearchText] = useState('');
-  const { people, selectedNames, handleSelect, clearSelections } =
-    useOutletContext();
 
-  const filteredPeople = people.filter((name) =>
-    name.toLowerCase().includes(searchText.toLowerCase()),
+  const {
+    people,
+    selectedPeopleIds,
+    selectAllPeople,
+    handleSelect,
+    clearSelections,
+    deletePerson,
+  } = useOutletContext();
+
+
+  const filteredPeople = people.filter((person) =>
+    person.name.toLowerCase().includes(searchText.toLowerCase()),
   );
+
+  const handleDelete = async (person) => {
+    const confirmed = window.confirm(
+      `Do you really want to remove ${person.name} from the database?`,
+    );
+
+    if (confirmed) {
+      await deletePerson(person.id);
+    }
+  };
+
 
   return (
     <PageLayout title="List of People">
       <div className="columns is-desktop">
-        <div className="column">
+        <div className={classNames("column", personId ? "is-4" : "is-12")}>
           <div className="block">
-            
-            {selectedNames.length < 2 ? (
+            {selectedPeopleIds.length < 2 ? (
               <Notification type="is-warning" className="has-text-centered">
-                <p className="has-text-centered">
+                <p>
                   👋 <strong>Select at least 2 people</strong> from the list
-                  below to unlock the gift draw!
+                  below to unlock the gift draw! You can also{" "}
+                  <strong>select all participants</strong> by clicking the
+                  button below.
                 </p>
+                <button
+                  className="button is-small is-info is-light mt-2"
+                  onClick={selectAllPeople}>
+                  Select All
+                </button>
               </Notification>
             ) : (
               <div className="buttons">
                 <Link
                   to="/exchange"
                   className="button is-success is-medium is-flex-grow-1">
-                  🎁 Ready to draw! ({selectedNames.length})
+                  🎁 Ready to draw! ({selectedPeopleIds.length})
                 </Link>
-
                 <button
                   className="button is-danger is-light is-medium"
-                  onClick={clearSelections}
-                  title="Unselect all">
+                  onClick={clearSelections}>
                   Clear
                 </button>
               </div>
@@ -52,22 +77,25 @@ export const PeoplePage = ({ noOutlet = false }) => {
           <Searchbar onSearch={(value) => setSearchText(value)} />
 
           <article className="panel is-info">
-            {filteredPeople.map((name) => (
+            {filteredPeople.map((person) => (
               <PeopleList
-                key={name}
-                name={name}
-                isSelected={selectedNames.includes(name)}
-                onSelect={() => handleSelect(name)}
+                key={person.id}
+                id={person.id}
+                name={person.name}
+                isSelected={selectedPeopleIds.includes(person.id)}
+                onSelect={() => handleSelect(person.id)}
+                onDelete={() => handleDelete(person)}
               />
             ))}
           </article>
         </div>
-        {!noOutlet && (
-          <div className="column">
-            <Outlet />
+
+        {personId && (
+          <div className="column is-8">
+            <Outlet context={{ people }} />
           </div>
         )}
       </div>
     </PageLayout>
   );
-}
+};
