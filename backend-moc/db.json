@@ -1,0 +1,48 @@
+{
+  "people": [
+    {
+      "id": "276",
+      "name": "Mark Johnson",
+      "email": "mark.j@webmail.com",
+      "newsletter": false
+    },
+    {
+      "id": "365",
+      "name": "John Smith",
+      "email": "smith.john@provider.com",
+      "newsletter": true
+    },
+    {
+      "id": "445",
+      "name": "Alex Reed",
+      "email": "alex.reed@company.org",
+      "newsletter": false
+    },
+    {
+      "id": "567",
+      "name": "Ann Taylor",
+      "email": "ann.taylor@social.com",
+      "newsletter": true
+    },
+    {
+      "name": "Anny Wallis",
+      "email": "annyanny@gmail.com",
+      "newsletter": true,
+      "id": "eD_TWbh"
+    },
+    {
+      "name": "Mark Twain",
+      "email": "Twain@mark.pl",
+      "newsletter": false,
+      "id": "rmzG9CH"
+    }
+  ],
+  "events": [
+    {
+      "id": "1",
+      "name": "Christmas Gift Exchange",
+      "date": "2026-12-20"
+    }
+  ],
+  "pairs": []
+}
