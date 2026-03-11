@@ -18,7 +18,7 @@ export const peopleService = {
 
 
     deletePerson(id) {
-        return axiosInstance.delete(`/people/${id}`);
+        return axiosInstance.delete(`/people?id=${id}`);
     },
 
 
