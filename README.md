@@ -1,32 +1,32 @@
-# 🎁 Secret Santa Gift Giver
+# 🎁 Secret Secret Gift Giver
 
-A professional React application to organize gift exchanges (Secret Santa), now powered by a **real-time REST API backend**. Built with **React**, **React Router**, and **Bulma CSS**.
+A professional **Fullstack** application to organize gift exchanges (Secret Santa). Now powered by a **custom Serverless API** and deployed in the cloud. Built with **React**, **Node.js**, and **Bulma CSS**.
 
-
+## 🔗 Live Demo
+Check out the working application here:
+`https://secret-gift-giver-ten.vercel.app/`
 
 ## 🚀 Features (New & Improved)
 
-* **Persistent Data**: Participants are now saved permanently to a **JSON database** via a REST API.
+* **Cloud-Native Backend**: Migrated from local `json-server` to **Vercel Serverless Functions** (Node.js).
 * **Full CRUD Operations**:
-    * **Create**: Add new participants with validation (Formik & Yup).
-    * **Read**: Fetch and synchronize the list from the server using Axios.
-    * **Delete**: Remove individuals or clear entire selections with a secure confirmation dialog.
-* **Advanced Selection Logic**:
-    * **Select All**: Quick selection of all participants for large groups.
-    * **Smart Selection**: Real-time tracking and unlocking of the draw feature.
-* **Professional Error Handling**: Custom notifications and safe `try-catch` blocks to handle server issues gracefully in English.
-* **Fair Draw Algorithm**: Uses the Fisher-Yates shuffle to ensure nobody draws themselves.
-* **Responsive Design**: Fully styled with Bulma CSS, mobile-friendly.
+    * **Create**: Add participants with validation (Formik & Yup).
+    * **Read**: Real-time synchronization with the server using **Axios**.
+    * **Delete**: Remove individuals with immediate server-side updates.
+* **Master-Detail View**: Advanced routing using **React Router 6** with a side-by-side list and info panel.
+* **Robust Validation**: Strict schemas for Names, Emails, and Newsletter consent using **Yup**.
+* **Professional UI**: Fully responsive layout powered by **Bulma CSS**, featuring loading states and error notifications.
+* **Fair Draw Logic**: Designed to ensure a perfect "Secret Santa" loop where no one draws themselves (requires min. 3 people).
 
 ## 🛠️ Tech Stack
 
 * **Frontend**: React (Vite)
-* **Backend**: JSON Server (REST API simulation)
-* **HTTP Client**: Axios (for asynchronous server communication)
-* **Routing**: React Router 6
-* **Form Management**: Formik & Yup (for robust validation)
-* **Styling**: Bulma CSS, Classnames
-* **State Management**: React Context API (via Outlet Context)
+* **Backend**: Node.js (Vercel Serverless Functions)
+* **HTTP Client**: Axios
+* **Routing**: React Router 6 (Nested Routes & Outlet Context)
+* **Forms**: Formik & Yup
+* **ID Generation**: Nanoid
+* **Styling**: Bulma CSS
 
 
 
@@ -43,41 +43,21 @@ A professional React application to organize gift exchanges (Secret Santa), now 
     npm install
     ```
 
-3.  **Database Setup**
-    The app uses `json-server`. Ensure you have a `db.json` file in your root folder with the following structure:
-    ```json
-    {
-      "people": []
-    }
+3.  **Environment Setup**
+    Create a `.env` file in the root directory:
+    ```env
+    VITE_BACKEND_URL=/api
     ```
 
-## 🏃‍♂️ How to Run
+4.  **Run Development Server**
+    ```bash
+    npm run dev
+    ```
 
-To run the full application, you need to start both the server and the frontend:
+## 🏗️ Project Roadmap
 
-**1. Start the Backend (Terminal 1):**
-
-```bash
-npx json-server --watch backend-moc/db.json --port 3001
-```
-
-**2. Start the Frontend (Terminal 2):**
-```bash
-Bash
-npm run dev
-```
-
-
-##  🏗️ Project Roadmap
-
-[x] Integrate REST API with Axios.
-
-[x] Implement permanent Delete functionality.
-
-[x] Add "Select All" feature for better UX.
-
-[ ] Next: Expand database to include Email addresses
-
-[ ] Next: Implement automated "Secret Santa" email notifications.
-
-[ ] Next: Add newsletter subscription status.
+* [x] Migrate from `json-server` to custom Serverless API.
+* [x] Implement **Nanoid** for secure participant identification.
+* [x] Create **Master-Detail** layout for better UX.
+* [ ] **Next**: Connect to a persistent Database (e.g., Vercel KV or MongoDB).
+* [ ] **Next**: Implement automated "Secret Santa" email notifications.
