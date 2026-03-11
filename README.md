@@ -58,7 +58,7 @@ To run the full application, you need to start both the server and the frontend:
 **1. Start the Backend (Terminal 1):**
 
 ```bash
-npx json-server --watch db.json --port 3000
+npx json-server --watch backend-moc/db.json --port 3001
 ```
 
 **2. Start the Frontend (Terminal 2):**
@@ -68,7 +68,8 @@ npm run dev
 ```
 
 
-🏗️ Project Roadmap
+##  🏗️ Project Roadmap
+
 [x] Integrate REST API with Axios.
 
 [x] Implement permanent Delete functionality.
